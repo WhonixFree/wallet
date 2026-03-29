@@ -1,0 +1,245 @@
+Build a demo-first frontend-only version of this local Windows desktop crypto portfolio tracker.
+
+Goal:
+make the app look fully working, polished, and production-ready in recorded demos, promo videos, and walkthroughs, even though backend functionality is not implemented yet.
+
+Important constraints:
+
+keep the product as a local Windows desktop app
+keep Electron as the desktop shell
+keep React as the renderer/UI layer
+do not implement Go backend in this phase
+do not implement SQLite in this phase
+do not implement real HTTP/API calls
+do not implement real blockchain, explorer, CoinGecko, or sync integrations
+do not implement real file persistence for notes
+do not implement real notifications
+do not implement real AI
+do not add auth, cloud accounts, transaction signing, swaps, bridges, or wallet-connect style features
+keep the app read-only
+
+Primary objective:
+the app should be convincing enough that a user can record a marketing/demo video and it looks like a real finished product.
+
+Build requirements:
+
+polished Electron app shell
+React routing and navigation
+desktop-focused dark UI
+sidebar and page header layout
+realistic seeded mock data
+async mock service layer
+believable loading, empty, success, and error states
+smooth transitions, hover states, modals, inline feedback, and status badges
+no dead buttons
+no TODO placeholders
+no visibly unfinished screens
+
+Implement these surfaces:
+
+Dashboard
+Wallets list
+Wallet details
+Groups list
+Group details
+Alerts
+Calendar / reminders
+Global search
+Notes editor / preview UI
+Transfers UI
+Import preview UI
+Demo assistant chat
+
+Dashboard should include:
+
+total portfolio value
+24h and 7d changes
+allocation overview
+chart
+top wallets
+recent activity
+sync status badge
+
+Wallets flow should include:
+
+searchable wallets list
+chain badges
+value/change columns
+archived state
+wallet detail page with holdings table, chart, notes, transfers, and sync state
+
+Groups flow should include:
+
+groups list
+group summaries
+linked wallets
+group detail chart
+notes panel
+
+Alerts flow should include:
+
+alerts list
+enabled/disabled toggle
+create/edit/delete modal flows
+believable price-above and price-below examples
+
+Calendar flow should include:
+
+upcoming reminders
+create/edit/delete reminder flows
+grouped upcoming dates
+
+Search should include:
+
+debounced input
+grouped results by entity type
+wallet and group matching
+fast local mock behavior
+
+Notes UI should include:
+
+preview mode
+edit mode
+save action
+fake saved confirmation
+clean markdown-like presentation
+
+Transfers UI should include:
+
+recent transfers list
+direction badges
+assets
+amounts
+timestamps
+status
+explorer action as UI element
+
+Import preview UI should include:
+
+choose target group
+choose network
+preview results with valid / invalid / duplicates / already existing
+mocked summary and success flow
+
+Demo assistant chat requirements:
+
+dedicated page, panel, or drawer
+message thread
+input field
+send button
+user message bubble
+assistant typing indicator
+assistant reply bubble
+optional suggestion chips
+assistant must reply with hardcoded mocked responses only
+no real LLM calls
+no backend dependency
+make it look polished and believable in video
+
+Implementation rule:
+do not hardcode data directly into pages.
+Create a centralized mock service layer with async promise-based methods and realistic delay simulation.
+
+Suggested mock services:
+
+getPortfolioSummary()
+getPortfolioChart()
+getWallets()
+getWalletById()
+getWalletHoldings()
+getWalletTransfers()
+getWalletChart()
+getGroups()
+getGroupById()
+getGroupWallets()
+getGroupChart()
+getAlerts()
+createAlert()
+updateAlert()
+deleteAlert()
+toggleAlert()
+getCalendarEvents()
+createCalendarEvent()
+updateCalendarEvent()
+deleteCalendarEvent()
+searchEntities()
+getNote(entityType, entityId)
+saveNote(entityType, entityId, content)
+getImportPreview()
+sendAssistantMessage()
+
+Data and architecture rules:
+
+use realistic seeded demo data
+keep data internally consistent across screens
+keep data shapes close to future domain/API structures
+keep wallet identity aligned with chain_type + normalized_address
+keep groups as first-class entities
+keep transfers read-only
+keep the codebase compatible with future preload/main/backend integration
+do not invent a separate architecture just for the demo
+
+Recommended code organization:
+
+pages
+components
+features
+mocks
+services/mock
+store
+hooks
+styles
+types
+
+Feature folders recommended:
+
+features/dashboard
+features/wallets
+features/groups
+features/alerts
+features/calendar
+features/search
+features/notes
+features/transfers
+features/import
+features/assistant-chat
+
+Implementation priority order:
+
+app shell and theme
+shared UI primitives
+demo seed data
+mock services
+dashboard
+wallets list
+wallet details
+groups list
+group details
+alerts
+calendar
+search
+notes polish
+transfers polish
+import preview
+assistant chat
+loading/empty/error pass
+final polish for video recording
+
+When making tradeoffs, prioritize:
+
+visual credibility
+smooth demo flow
+realistic populated states
+polished interaction feedback
+consistency across screens
+future compatibility with the planned real architecture
+
+Do not prioritize:
+
+backend completeness
+real integrations
+hidden infrastructure
+extra scope outside the agreed read-only tracker
+
+Final result expected:
+a frontend-only demo build that looks like a real functional crypto portfolio desktop app and is ready for promo/demo recording.

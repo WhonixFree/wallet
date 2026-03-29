@@ -1,0 +1,583 @@
+Purpose
+
+This document defines a demo-first implementation mode for the project.
+
+The goal of this mode is not to complete the real backend-driven MVP first.
+The goal is to create a visually convincing, polished, frontend-heavy product shell that looks fully working in recorded demos, promo videos, and product previews.
+
+This document supplements the existing architecture and scope docs.
+It does not replace the long-term target architecture.
+It defines what the coding agent should build now so that the app looks real before the full backend is implemented.
+
+Demo Build Definition
+
+The demo build is:
+
+a local Windows desktop application demo
+visually production-ready
+interaction-rich
+populated with believable portfolio data
+suitable for marketing videos and walkthrough recordings
+
+The demo build is not:
+
+a backend-complete production release
+a full replacement for the planned Go + SQLite implementation
+a live blockchain-connected product
+a real AI-integrated product build
+
+Primary goal:
+a user should be able to open the app, navigate through the main flows, and record a product demo without the app looking unfinished.
+
+Relationship to Existing Architecture
+
+This demo build must preserve the existing long-term architecture direction:
+
+desktop shell remains Electron
+UI layer remains React
+future backend remains Go
+future persistence remains SQLite
+future notes storage remains Markdown files on disk
+future communication boundary remains preload/main/backend oriented
+
+The demo build must not introduce architecture that conflicts with the planned production structure.
+
+Important:
+even when using mocked data, the renderer structure, service boundaries, and data shapes should remain close to the future real application.
+
+Core Demo Build Rule
+
+Everything the user sees during a recorded walkthrough should appear intentional, responsive, and complete.
+
+This means:
+
+no empty shells
+no dead buttons
+no TODO labels
+no obviously fake placeholder lorem ipsum
+no broken navigation
+no unfinished raw developer states
+no controls that visibly do nothing
+
+Buttons should either:
+
+perform a believable mocked action
+open a real modal or drawer
+trigger a realistic loading/success/error sequence
+or be hidden until they are supported
+What Must Be Built in This Iteration
+
+This iteration should implement:
+
+Electron shell
+React renderer
+desktop layout
+routing
+sidebar navigation
+top bar / page header pattern
+polished dashboard
+wallets list screen
+wallet details screen
+groups list screen
+group details screen
+alerts screen
+calendar screen
+global search UI
+notes editor / preview UI
+transfers UI
+import preview UI
+demo assistant chat UI
+mock service layer
+hardcoded seeded data
+realistic loading / empty / error states
+smooth transitions and UI polish appropriate for recorded demos
+What Must Not Be Built in This Iteration
+
+Do not implement in this demo build:
+
+real Go backend logic
+real SQLite persistence
+real CoinGecko calls
+real explorer / indexer integrations
+real blockchain syncing
+real file persistence for notes
+real desktop notification scheduling
+real import parsing logic
+real AI model integration
+real cloud infrastructure
+auth, login, or accounts
+transaction signing
+sending assets
+swaps, bridges, custody-wallet behavior, or wallet-connect style flows
+
+This remains a read-only portfolio tracker demo.
+
+Demo Data Policy
+
+The application must ship with believable seeded demo data.
+
+Mock data should look like it could belong to a real user.
+It should not feel random or synthetic in an obvious way.
+
+Include realistic:
+
+wallet names
+group names
+wallet addresses
+token balances
+USD values
+24h and 7d changes
+charts
+recent transfers
+sync timestamps
+alert rules
+reminder events
+notes content
+import preview results
+assistant messages
+
+Use a coherent data story.
+For example:
+
+a “Main Treasury” wallet
+a “High Conviction” group
+a “Watchlist” group
+BTC / ETH / SOL / USDT / stablecoin holdings
+recent incoming and outgoing transfers
+active alerts around BTC and ETH price thresholds
+upcoming reminders linked to groups or wallets
+Demo UX Quality Standard
+
+The app must feel alive.
+
+Implement:
+
+realistic loading delays
+skeletons where useful
+hover states
+focus states
+row selection states
+modal animations or smooth open/close transitions
+optimistic-feeling local state updates where appropriate
+believable sync badges and last-updated timestamps
+inline validation for forms
+meaningful empty states
+graceful mocked error states
+
+The app should feel stable on camera.
+No jarring jumps, broken spacing, or debug-looking UI.
+
+Screen Requirements
+
+8.1 Dashboard
+
+The dashboard should feel like a fully working portfolio home screen.
+
+Include:
+
+total portfolio value
+24h value change
+7d value change
+allocation overview
+chart area
+top wallets block
+recent activity block
+sync status area
+quick links to wallets, groups, alerts, and search
+
+The dashboard should be visually rich enough to serve as the opening shot in a promo video.
+
+8.2 Wallets List
+
+Include:
+
+searchable wallet list
+chain badges
+display names
+shortened addresses
+current value
+recent change
+sync status
+archive state
+click-through into wallet details
+
+The list should support a polished browsing flow for demo purposes.
+
+8.3 Wallet Details
+
+Include:
+
+wallet header
+chain type
+normalized address display
+explorer action button as a UI element
+holdings table
+wallet value chart
+note editor / preview panel
+recent transfer list
+sync status area
+empty states only when intentionally useful
+
+This screen should be good enough to spend meaningful time on during a recorded walkthrough.
+
+8.4 Groups List
+
+Include:
+
+group cards or grouped table layout
+group name
+description
+linked wallet count
+total value
+recent change
+quick navigation to details
+
+8.5 Group Details
+
+Include:
+
+group summary
+linked wallets list
+group chart
+note editor / preview panel
+linked reminders if useful
+related alerts if useful
+
+8.6 Alerts Screen
+
+Include:
+
+active alerts list
+enabled / disabled state
+last-triggered badge or value
+create alert modal
+edit alert modal
+delete flow
+price-above and price-below examples
+calendar reminder entries if the design mixes them in the same surface
+
+The screen should feel complete enough to show configuration flow in video.
+
+8.7 Calendar Screen
+
+Include:
+
+upcoming reminders
+grouped upcoming dates
+create reminder modal
+edit reminder modal
+linked entity metadata where useful
+empty state for filtered views if appropriate
+
+8.8 Global Search
+
+Include:
+
+top-level search field
+debounced behavior
+grouped results by entity type
+wallet search by display name and address
+group search by name
+keyboard-friendly interactions if practical
+
+Search should feel fast and believable.
+
+8.9 Notes UI
+
+Notes should look fully usable in the demo build.
+
+Include:
+
+preview mode
+edit mode
+save interaction
+fake “saved” confirmation
+Markdown-feeling presentation
+graceful missing-note state if shown deliberately
+
+Even if persistence is mocked, the flow must appear complete.
+
+8.10 Transfers UI
+
+Include:
+
+recent transfers list
+direction badges
+asset symbols
+amounts
+timestamps
+status
+explorer link UI element
+empty state and loading state support
+
+8.11 Import Preview UI
+
+Even if import parsing is mocked, the UI flow should exist for demo purposes.
+
+Include:
+
+choose target group
+choose network
+choose file action
+preview result view with:
+valid
+invalid
+duplicates in file
+already existing wallets
+import summary modal or summary panel
+
+This flow is useful in video because it makes the product look operational.
+
+8.12 Demo Assistant Chat
+
+The demo build may include an assistant chat surface only as a demo-only UI feature.
+
+Include:
+
+dedicated page, panel, or drawer
+message thread
+input field
+send button
+user message bubble
+assistant typing indicator
+assistant response bubble
+optional suggestion chips
+
+Important:
+this is not real AI for this iteration.
+It is a mocked demo interaction layer.
+
+Demo Assistant Chat Rules
+
+The assistant chat must be implemented as mocked frontend behavior only.
+
+Allowed behavior:
+
+user types a message
+message appears immediately
+typing indicator appears after send
+assistant replies after a short delay
+replies come from a hardcoded response set or deterministic mocked logic
+
+Not allowed in this iteration:
+
+real LLM calls
+real portfolio analysis
+backend-dependent chat orchestration
+claims of real autonomous intelligence
+hidden integrations pretending to be live AI
+
+The UI may look polished and convincing, but implementation must remain clearly demo-scoped inside the codebase.
+
+Mock Service Layer Rules
+
+All major screen data should come through a mock service layer instead of being hardcoded directly in page components.
+
+Use async promise-based mocked functions so the UI already behaves like a real app.
+
+Suggested mocked services:
+
+getPortfolioSummary()
+getPortfolioChart()
+getWallets()
+getWalletById()
+getWalletHoldings()
+getWalletTransfers()
+getGroups()
+getGroupById()
+getGroupWallets()
+getAlerts()
+createAlert()
+updateAlert()
+deleteAlert()
+getCalendarEvents()
+createCalendarEvent()
+updateCalendarEvent()
+deleteCalendarEvent()
+searchEntities()
+getNote(entityType, entityId)
+saveNote(entityType, entityId)
+getImportPreview()
+sendAssistantMessage()
+
+Rules:
+
+return async promises
+simulate realistic delay
+keep return shapes stable
+keep names close to future real contract intent
+centralize mock data so the app feels internally consistent
+Data Shape Compatibility Rule
+
+Even in demo mode, data structures should stay close to the future domain and API model.
+
+Keep concepts aligned with the long-term design:
+
+wallet identity uses chain_type + normalized_address
+groups remain first-class entities
+holdings remain wallet-scoped
+transfers remain read-only
+snapshots represent portfolio, wallet, or group values over time
+alerts remain limited to MVP-style alert categories
+calendar events remain scoped entities
+notes remain wallet/group oriented
+
+The frontend may simulate these models, but should not invent a completely different product structure just for the demo.
+
+Visual Design Standard
+
+The visual direction should be:
+
+dark desktop-focused UI
+clean cards and panels
+sharp but readable tables
+premium-feeling chart blocks
+modern spacing
+strong visual hierarchy
+restrained but polished accent color usage
+consistent iconography
+strong typography contrast
+camera-friendly contrast and density
+
+The product should look good both in direct use and in recorded fullscreen walkthroughs.
+
+Video Recording Readiness Rules
+
+The build should be easy to demo in sequence.
+
+A recommended walkthrough should be possible:
+
+open dashboard
+inspect total value and chart
+open wallets list
+open a wallet detail page
+inspect holdings and transfers
+open notes
+open groups
+inspect a group summary
+open alerts and edit one
+open calendar reminders
+use global search
+send a message to the demo assistant
+end on a polished summary view
+
+The coding agent should optimize for this kind of flow.
+
+No Fake-But-Broken Behavior
+
+Do not add features that visually imply deep functionality if the interaction immediately collapses.
+
+Examples of bad demo behavior:
+
+clicking buttons that do nothing
+pages that render only titles with no content
+empty tables with no explanation
+charts with obviously meaningless placeholder lines
+assistant chat that accepts input but never responds
+import button that opens nothing
+save buttons with no feedback
+sync badges that never change
+
+If a flow exists in UI, it must feel intentionally completed at the demo level.
+
+Acceptable Mocking Techniques
+
+Allowed demo techniques:
+
+seeded static data
+deterministic fake responses
+simulated sync progress
+simulated loading delays
+fake “last synced” timestamps
+fake success toasts
+fake save confirmations
+mock chart series
+mock empty and mock failure states accessible through local toggles or developer flags if desired
+
+These are encouraged when they improve demo quality.
+
+Frontend Layering Rule
+
+Even in demo mode, keep code organized by future layer boundaries.
+
+Renderer should contain:
+
+pages
+components
+charts
+forms
+search UX
+notes UI
+alerts UI
+reminder UI
+local screen state
+demo assistant UI
+mock service consumers
+
+Do not scatter raw mock constants across unrelated screens.
+Keep demo state and service access structured.
+
+Suggested Renderer Additions
+
+Within the renderer app, the following folders are recommended if not already present:
+
+features/dashboard
+features/wallets
+features/groups
+features/alerts
+features/calendar
+features/search
+features/notes
+features/transfers
+features/import
+features/assistant-chat
+mocks
+services/mock
+types/demo
+components/layout
+components/charts
+components/feedback
+Demo-Only Labels Inside Code
+
+The source code should clearly communicate demo-only boundaries.
+
+Good examples:
+
+DemoAssistantService
+mockPortfolioService
+demoSeedData
+simulateLatency()
+demoBuild flag if needed
+
+This keeps the codebase honest while still making the UI look polished.
+
+Deliverable for This Iteration
+
+The deliverable for this iteration is:
+a polished desktop demo build that visually appears like a functional crypto portfolio tracker and is strong enough for marketing videos, teaser recordings, product previews, and UI walkthroughs.
+
+It should feel:
+
+coherent
+intentional
+complete on the surface
+smooth to navigate
+believable to a viewer
+
+It does not need to be backend-complete yet.
+
+Final Instruction to the Coding Agent
+
+When tradeoffs appear, prioritize:
+
+visual credibility
+smooth walkthrough flow
+populated realistic states
+polished transitions
+demo usability
+internal consistency of data
+future compatibility with the planned architecture
+
+Do not prioritize backend completeness in this phase.
+Do not expand scope into unrelated product directions.
+Do not invent cloud features or wallet functionality outside the agreed read-only tracker definition.

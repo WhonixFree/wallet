@@ -1,0 +1,830 @@
+Implementation Goal
+
+Build a polished frontend-only demo version of the local Windows desktop crypto portfolio tracker.
+
+The goal of this phase is not backend completeness.
+The goal is to make the application look fully functional, visually credible, and smooth enough for marketing videos, product walkthroughs, and teaser recordings.
+
+The build should:
+
+look production-ready on camera
+feel responsive and alive
+show realistic portfolio data
+support believable user flows
+remain compatible with the future real architecture
+Scope of This Plan
+
+This plan covers only the demo-first frontend implementation.
+
+Included in this phase:
+
+Electron desktop shell
+React renderer
+routing and navigation
+app layout
+seeded mock data
+async mock services
+realistic loading / success / error states
+polished UI for main product flows
+demo-only assistant chat UI
+demo-only import preview UI
+local frontend state management
+visual behavior suitable for recorded walkthroughs
+
+Excluded from this phase:
+
+real Go backend
+real SQLite persistence
+real preload-to-backend production data flow
+real CoinGecko integration
+real chain explorer integration
+real file parsing
+real markdown file IO
+real notifications
+real AI integration
+Architectural Intention
+
+This phase must preserve the long-term architecture direction.
+
+Important constraints:
+
+Electron remains the desktop shell
+React remains the UI layer
+mock services should imitate future backend-facing service boundaries
+data shapes should stay close to future domain and contract structures
+renderer should not become the permanent source of truth for business logic
+
+The demo build is a temporary product shell, not a replacement for the real backend-driven implementation.
+
+Success Criteria
+
+This phase is successful when:
+
+the app can be opened and navigated like a complete product
+every major screen looks intentionally designed
+the app supports a clean demo flow from dashboard to assistant chat
+no major surface looks empty, broken, or obviously unfinished
+UI interactions feel believable even when fully mocked
+Codex can continue feature work without restructuring the app later
+Implementation Strategy
+
+Use a vertical-slice frontend strategy.
+
+Do not start by building every page at once in shallow form.
+Instead, build a complete demo shell and then make each major feature visually complete one by one.
+
+Recommended order:
+
+repo/bootstrap and layout
+mock data foundation
+service layer
+dashboard
+wallets flow
+groups flow
+alerts flow
+calendar flow
+search
+notes
+transfers
+import preview
+demo assistant chat
+polish pass
+demo recording pass
+Phase 0 — Lock Demo Ground Rules
+
+Before coding:
+
+treat this build as a demo-first frontend phase
+do not add backend dependencies
+do not invent cloud or auth features
+do not expand into custody-wallet behavior
+do not implement trading or transaction sending
+do not implement real AI analysis
+
+Deliverables:
+
+approved DEMO_BUILD_SCOPE
+approved frontend demo implementation plan
+clear instruction that this phase prioritizes visual credibility over backend completeness
+Phase 1 — Repository and App Bootstrap
+
+7.1 Use Existing Structure
+
+Follow the existing project layout direction and keep code inside the renderer layer organized cleanly.
+
+Recommended renderer structure:
+
+apps/desktop/renderer/src/
+
+app/
+pages/
+components/
+features/
+hooks/
+services/
+store/
+styles/
+types/
+mocks/
+
+Add demo-focused feature folders if useful:
+
+features/dashboard
+features/wallets
+features/groups
+features/alerts
+features/calendar
+features/search
+features/notes
+features/transfers
+features/import
+features/assistant-chat
+
+7.2 Bootstrap Frontend Demo Shell
+
+Tasks:
+
+create base Electron desktop app
+create React renderer app
+set up router
+create global layout
+add sidebar navigation
+add page header pattern
+add theme foundation
+add reusable card / table / modal / badge primitives
+add toasts or inline feedback pattern
+add loading and empty state components
+
+Deliverable:
+
+app launches into a polished shell, even before major data screens are complete
+Phase 2 — Demo Data Foundation
+
+Create a single coherent seeded data source for the whole demo.
+
+8.1 Create Demo Seed Data
+
+Create realistic static demo entities:
+
+portfolio summary
+wallets
+wallet profiles
+groups
+group memberships
+holdings
+transfers
+portfolio snapshots
+wallet snapshots
+group snapshots
+alerts
+calendar events
+notes
+import preview results
+assistant replies
+search indexes
+
+8.2 Data Quality Rules
+
+Seed data must:
+
+look realistic
+be internally consistent
+support all key screens
+tell a believable portfolio story
+avoid obviously random placeholder content
+
+Recommended demo entities:
+
+Main Treasury
+High Conviction
+Watchlist
+BTC Core
+ETH Ops
+Stable Reserve
+
+Recommended holdings mix:
+
+BTC
+ETH
+SOL
+USDT
+USDC
+one or two smaller tokens for table richness
+
+Recommended states:
+
+at least one wallet with strong positive 24h change
+one wallet with slight negative movement
+one archived wallet
+one group with multiple linked wallets
+one group with light activity
+active alerts
+upcoming reminders
+recent transfers across several chains
+
+Deliverable:
+
+a central demo seed module powering all major screens
+Phase 3 — Mock Service Layer
+
+Do not place raw demo arrays directly in pages.
+All page data must flow through a mock service layer.
+
+9.1 Create Mock Service Modules
+
+Recommended services:
+
+portfolioDemoService
+walletDemoService
+groupDemoService
+alertDemoService
+calendarDemoService
+searchDemoService
+notesDemoService
+importDemoService
+assistantDemoService
+
+9.2 Suggested Service Methods
+
+Portfolio:
+
+getPortfolioSummary()
+getPortfolioChart()
+getTopWallets()
+getRecentActivity()
+
+Wallets:
+
+getWallets()
+getWalletById()
+getWalletHoldings(walletId)
+getWalletTransfers(walletId)
+getWalletChart(walletId)
+
+Groups:
+
+getGroups()
+getGroupById(groupId)
+getGroupWallets(groupId)
+getGroupChart(groupId)
+
+Alerts:
+
+getAlerts()
+createAlert(input)
+updateAlert(id, input)
+deleteAlert(id)
+toggleAlert(id)
+
+Calendar:
+
+getCalendarEvents()
+createCalendarEvent(input)
+updateCalendarEvent(id, input)
+deleteCalendarEvent(id)
+
+Search:
+
+searchEntities(query)
+
+Notes:
+
+getNote(entityType, entityId)
+saveNote(entityType, entityId, content)
+
+Import:
+
+getImportPreview(input)
+
+Assistant:
+
+sendAssistantMessage(message)
+
+9.3 Mock Service Behavior Rules
+
+All services should:
+
+return async promises
+simulate latency
+support loading states
+support some mocked error paths
+preserve stable response shape
+imitate future real backend usage
+
+Deliverable:
+
+page components consume services, not raw data files
+Phase 4 — App Layout and Navigation
+
+Build a polished desktop application frame.
+
+Tasks:
+
+sidebar with icons and labels
+page title area
+global search entry point
+sync status indicator
+compact portfolio summary area if useful
+demo assistant access point
+clean responsive desktop layout
+scroll behavior that feels stable during screen recordings
+
+Navigation destinations:
+
+Dashboard
+Wallets
+Groups
+Alerts
+Calendar
+Search
+Assistant
+
+Deliverable:
+
+a stable app frame suitable for all subsequent feature work
+Phase 5 — Dashboard Vertical Slice
+
+The dashboard should become the first camera-ready page.
+
+Tasks:
+
+top summary cards
+total portfolio value
+24h change
+7d change
+allocation block
+portfolio chart
+top wallets block
+recent activity block
+sync badge
+quick actions or quick navigation tiles
+
+Visual goals:
+
+strong first impression
+rich but readable
+enough information density for promo footage
+no dead or empty areas
+
+Deliverable:
+
+dashboard is usable as the opening scene of a marketing video
+Phase 6 — Wallets Vertical Slice
+
+12.1 Wallets List
+
+Tasks:
+
+wallets table or card list
+search input
+filter options if useful
+chain badges
+value column
+change column
+archived state indicator
+click-through to wallet details
+
+12.2 Wallet Details
+
+Tasks:
+
+header with display name and address
+chain badge
+explorer action button as UI element
+sync status area
+holdings table
+wallet chart
+note panel
+recent transfers section
+realistic empty or warning states where useful
+
+Deliverable:
+
+wallet browsing and inspection feel complete in a demo
+Phase 7 — Groups Vertical Slice
+
+13.1 Groups List
+
+Tasks:
+
+group cards or table
+description
+linked wallet count
+total value
+recent change
+click-through to details
+
+13.2 Group Details
+
+Tasks:
+
+group summary
+linked wallets
+group chart
+note panel
+related reminders or alerts if useful
+polished visual structure
+
+Deliverable:
+
+groups feel like a first-class feature, not a side page
+Phase 8 — Alerts Vertical Slice
+
+Tasks:
+
+alerts list
+enabled / disabled states
+create alert modal
+edit alert modal
+delete flow
+last-triggered status
+price-above and price-below examples
+clean form validation
+
+Behavior:
+
+create/edit/delete should update local state
+toggles should feel instant
+confirmation or toast feedback should appear where useful
+
+Deliverable:
+
+alerts configuration flow is demoable from start to finish
+Phase 9 — Calendar Vertical Slice
+
+Tasks:
+
+upcoming reminders list
+date grouping
+linked entity context
+create reminder modal
+edit reminder modal
+delete flow
+empty state for filtered or edge cases
+
+Visual goal:
+
+make reminders look like a natural extension of wallet/group management
+
+Deliverable:
+
+calendar/reminder flow is polished enough for walkthrough recording
+Phase 10 — Search UX
+
+Tasks:
+
+top-level search entry point
+dedicated search screen or overlay
+debounced input
+grouped results by entity type
+wallet result cards or rows
+group result cards or rows
+highlight matching text if useful
+keyboard-friendly interactions if practical
+
+Search rules:
+
+case-insensitive
+partial match
+fast-feeling local filtering
+believable loading delay only if it improves realism
+
+Deliverable:
+
+search looks instant, useful, and product-grade
+Phase 11 — Notes UI
+
+Tasks:
+
+note preview mode
+note edit mode
+markdown-like rendering style
+save button
+fake saved confirmation
+missing note empty state
+consistent wallet/group note pattern
+
+Behavior:
+
+save updates local in-memory state
+show recent save feedback
+preserve content during navigation if store architecture supports it
+
+Deliverable:
+
+notes look fully usable during demo even without file persistence
+Phase 12 — Transfers UI
+
+Tasks:
+
+transfer list component
+direction badge
+asset symbol
+normalized amount
+timestamp
+status
+explorer link UI element
+loading state
+empty state
+maybe compact filters if useful
+
+Data should feel recent and believable.
+
+Deliverable:
+
+transfer visibility looks operational and analytics-oriented
+Phase 13 — Import Preview UI
+
+This is useful for demo value even if parsing is mocked.
+
+Tasks:
+
+open import flow from wallets or groups context
+choose target group
+choose network
+choose file action
+preview result panel
+classify rows into:
+valid
+invalid
+duplicates in file
+already existing wallets
+show summary counts
+show confirm button
+show mocked success result
+
+Behavior:
+
+no real parsing required
+use deterministic demo preview scenarios
+make the flow feel complete
+
+Deliverable:
+
+import preview looks operational in video
+Phase 14 — Demo Assistant Chat
+
+The assistant chat is demo-only in this phase.
+
+Tasks:
+
+create dedicated page, panel, or drawer
+message thread UI
+input field
+send button
+suggestion chips if useful
+assistant typing indicator
+mocked assistant reply after delay
+scroll-to-bottom behavior
+polished empty-start state
+
+Behavior rules:
+
+user message appears instantly
+assistant responds after short delay
+reply comes from a small hardcoded response set
+no real AI, no real portfolio analysis, no backend calls
+
+Recommended reply styles:
+
+summary-style reply
+alert-oriented reply
+watchlist-oriented reply
+explicit demo reply explaining that live AI is not connected yet
+
+Deliverable:
+
+assistant interaction looks polished and believable in a recording
+Phase 15 — Shared Component Pass
+
+After main pages exist, normalize the UI with reusable components.
+
+Recommended shared components:
+
+AppShell
+Sidebar
+PageHeader
+MetricCard
+SectionCard
+StatusBadge
+ChainBadge
+EmptyState
+ErrorState
+LoadingSkeleton
+ChartCard
+SearchInput
+NoteEditor
+TransfersTable
+AlertFormModal
+ReminderFormModal
+AssistantComposer
+MessageBubble
+ToastFeedback
+
+Goal:
+
+reduce inconsistency
+improve polish
+make future Codex work cleaner
+Phase 16 — Store and State Rules
+
+Use local frontend state cleanly.
+
+Suggested state split:
+
+app UI state
+screen filters
+modal state
+current selected wallet/group
+cached mock query results
+notes draft state
+assistant thread state
+
+Rules:
+
+keep service results in one predictable place
+avoid scattering view state across unrelated components
+avoid giant monolithic state if feature stores are cleaner
+keep mutation paths understandable for Codex
+Phase 17 — Loading, Empty, and Error States
+
+Every major surface must handle:
+
+loading
+success
+empty
+error
+
+Tasks:
+
+add skeletons to primary charts and summary cards
+add empty states to notes, transfers, reminders, search
+add retry action where appropriate
+add subtle mocked error state for service failures
+ensure these states are visually intentional, not accidental
+
+Deliverable:
+
+the app feels robust instead of fragile
+Phase 18 — Visual Polish Pass
+
+Once all feature flows exist, do a dedicated polish phase.
+
+Tasks:
+
+spacing cleanup
+typography hierarchy cleanup
+alignment cleanup
+icon consistency
+animation smoothing
+hover/focus states
+button consistency
+scroll polish
+modal polish
+chart block polish
+table readability cleanup
+high-contrast pass for video recording
+
+Rule:
+
+this phase is not optional
+the product must look demo-ready, not just feature-complete
+Phase 19 — Demo Flow Optimization
+
+Test the app specifically as a recorded product walkthrough.
+
+Target recording flow:
+
+open dashboard
+inspect summary cards and chart
+open wallets list
+open wallet details
+inspect holdings, notes, transfers
+open groups
+inspect group details
+open alerts and edit one
+open calendar
+use search
+run import preview
+open assistant chat and send a message
+end on a strong dashboard or wallet summary view
+
+Tasks:
+
+remove awkward pauses
+ensure every click has visible payoff
+remove dead navigation paths
+make important pages camera-friendly
+keep charts and tables legible in fullscreen capture
+
+Deliverable:
+
+build is optimized for video, not just engineering completeness
+Phase 20 — Demo QA Pass
+
+Test scenarios:
+
+app launches cleanly
+every route renders
+no major console-breaking errors
+dashboard loads consistently
+wallets list links work
+wallet details load correct data
+groups flow works
+alerts create/edit/delete works locally
+reminder CRUD works locally
+notes save feedback works
+search returns relevant results
+import preview always shows believable outcomes
+assistant chat always responds
+loading and error states do not break layout
+archived wallet state renders cleanly
+
+Deliverable:
+
+stable demo build suitable for repeated recording sessions
+Suggested Implementation Order for Codex
+
+Strict recommended order:
+
+app shell
+theme and primitives
+demo seed data
+mock services
+dashboard
+wallets list
+wallet details
+groups list
+group details
+alerts
+calendar
+search
+notes polish
+transfers polish
+import preview
+assistant chat
+shared components cleanup
+loading/empty/error pass
+final polish
+demo QA pass
+File and Naming Guidance
+
+Use names that make demo-only status obvious in code.
+
+Good examples:
+
+demoSeedData.ts
+mockPortfolioService.ts
+mockWalletService.ts
+DemoAssistantService.ts
+simulateLatency.ts
+demoScenarios.ts
+
+Avoid misleading names that imply the feature is already live or production-backed.
+
+Coding Rules for This Phase
+
+Do:
+
+keep code modular
+keep mock services centralized
+keep data shapes future-compatible
+make UI interactions polished
+optimize for believable product behavior
+build reusable feature-level components
+
+Do not:
+
+mix raw data blobs into page components
+invent a second unrelated architecture
+overbuild backend abstractions now
+create fake features that immediately break when clicked
+add scope outside the agreed read-only portfolio product
+Demo Build Acceptance Standard
+
+This phase is complete when:
+
+the app looks convincingly functional
+a promo video can be recorded without obvious unfinished screens
+main user flows feel smooth
+the demo assistant chat works as a polished mock
+the app remains structurally compatible with the future backend implementation
+Final Instruction to the Coding Agent
+
+During this phase, prioritize:
+
+visual credibility
+smooth navigation
+realistic seeded states
+polished interaction feedback
+clean feature boundaries
+future compatibility with the planned architecture
+
+Do not prioritize:
+
+real backend logic
+external integrations
+hidden infrastructure
+scope expansion outside the agreed product
+
+Build the demo so it looks like a real product now, while keeping the codebase ready for the real backend later.
